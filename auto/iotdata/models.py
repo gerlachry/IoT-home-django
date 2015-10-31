@@ -1,33 +1,10 @@
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from rest_framework.authtoken.models import Token
+from django.conf import settings
 
-class Locations(models.Model):
-    name = models.CharField(max_length=255);
-    active = models.BooleanField();
-    create_date = models.DateTimeField('date record was created');
-    modified_date = models.DateTimeField('date record was last modified');
-
-
-class Sensors(models.Model):
-    device_id = models.CharField(max_length=255);
-    location_id = models.ForeignKey(Locations);
-    name = models.CharField(max_length=255);
-    purchased_from = models.CharField(max_length=255);
-    manufacturer = models.CharField(max_length=255);
-    active = models.BooleanField();
-    create_date = models.DateTimeField('date record was created');
-    modified_date = models.DateTimeField('date record was last modified');
-
-
-class ReadingType(models.Model):
-    name = models.CharField(max_length=255);
-    active = models.BooleanField();
-    create_date = models.DateTimeField('date record was created');
-    modified_date = models.DateTimeField('date record was last modified');
-
-class Readings(models.Model):
-    sensor_id = models.ForeignKey(Sensors);
-    reading_type_id = models.ForeignKey(ReadingType);
-    value = models.TextField();
-    info = models.TextField();
-    create_date = models.DateTimeField();
-
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
