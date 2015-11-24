@@ -7,8 +7,9 @@ from elasticsearch import Elasticsearch
 from auto.localsettings import ES_HOST, ES_PORT
 import json
 import logging
+from rest_framework.parsers import JSONParser
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 es = Elasticsearch(host=ES_HOST, port=ES_PORT)
 
@@ -18,11 +19,18 @@ class Readings(APIView):
     """
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, )
+    parser_classes = (JSONParser, )
+
     def __init__(self):
         self.log = logging.getLogger('Readings')
 
     def post(self, request):
-        json_data = json.loads(request.body)
+        print 'in post method'
+        json_data = request.data
+        print 'json_data'
+        print json_data
+        print type(json_data)
+        print request.stream
         #index will be device name
         idx = json_data['device_name']
         self.log.info('writing to index %s data %s' % (idx, json_data))
