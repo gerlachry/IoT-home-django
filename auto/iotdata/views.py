@@ -30,7 +30,6 @@ class Readings(APIView):
         print 'json_data'
         print json_data
         print type(json_data)
-        print request.stream
         #index will be device name
         idx = json_data['device_name']
         self.log.info('writing to index %s data %s' % (idx, json_data))
