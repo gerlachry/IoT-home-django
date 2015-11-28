@@ -40,6 +40,7 @@ INSTALLED_APPS = (
     'rest_framework',
     'rest_framework.authtoken',
     'iotdata',
+    'auto',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,6 +82,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'auto',
+        'HOST': '192.168.99.100',
+        'PORT': '32768',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres'
     }
 }
 
