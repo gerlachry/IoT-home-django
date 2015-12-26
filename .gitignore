@@ -1,3 +1,3 @@
 *.pyc
-iot/iotdata/localsettings.py
+iot/auto/localsettings.py
 *.idea

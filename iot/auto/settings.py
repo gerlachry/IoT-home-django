@@ -39,8 +39,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework.authtoken',
-    'iotdata',
     'auto',
+    'iotdata',
+    'watchman',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -78,16 +79,10 @@ WSGI_APPLICATION = 'auto.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'auto',
-        'HOST': '192.168.99.100',
-        'PORT': '32770',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres'
-    }
-}
+# DATABASES = {
+#     'default': {
+#     }
+# }
 
 
 # Internationalization
@@ -113,3 +108,9 @@ REST_FRAMEWORK = {
             'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
             'PAGE_SIZE': 10
 }
+
+try:
+    from localsettings import *
+except ImportError:
+    print 'error finding localsettings'
+    pass

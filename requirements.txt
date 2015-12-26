@@ -5,3 +5,4 @@ elasticsearch==2.1.0
 psycopg2==2.6.1
 urllib3==1.12
 wsgiref==0.1.2
+git+git://github.com/gerlachry/django-watchman.git@master

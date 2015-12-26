@@ -22,5 +22,6 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
-    url(r'api/readings', Readings.as_view(), name='readings')
+    url(r'api/readings', Readings.as_view(), name='readings'),
+    url(r'^watchman/', include('watchman.urls')),
 ]

@@ -1,16 +1,15 @@
 import logging
+import json
+import datetime
 
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-
 from elasticsearch import Elasticsearch, client
-from rest_framework.parsers import JSONParser
-from localsettings import ES_HOST, ES_PORT
-import json
-import datetime
+
+from auto.localsettings import ES_HOST, ES_PORT
 
 logging.basicConfig(level=logging.DEBUG)
 
