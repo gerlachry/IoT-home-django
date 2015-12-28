@@ -78,10 +78,10 @@ class Readings():
                 }
             ]
         }
-        self.log.info(query_string)
+        self.log.debug(query_string)
         results = es.search(index=device_name, body=query_string, size=size)
-        self.log.info(results['hits'])
-        return Response(results['hits'])
+        self.log.debug(results)
+        return Response(results['hits']['hits'])
 
 
 def setup_index(index, doc_type, mappings):
