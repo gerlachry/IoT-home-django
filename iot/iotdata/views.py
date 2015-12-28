@@ -23,6 +23,9 @@ def get_item(dictionary, key):
     """
     filter to use in html tags for looking up a dictionary value for a key
     """
+    print dictionary.get(key)
+    print type(dictionary.get(key))
+    print dictionary.get(key).get('temperature')
     return dictionary.get(key)
 
 @login_required

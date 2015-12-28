@@ -52,11 +52,13 @@ class Readings():
     def get(self, request):
         """retrieve most recent sensor readings for a given device"""
         query_param = {}
-        try:
-            query_param = request.query_params
-            self.log.info(query_param)
-        except Exception, ex:
-            self.log.error('error in query_params %s' % ex, exc_info=True, extra={'request': request})
+        if 'query_param' in request:
+            try:
+                query_param = request.query_params
+                self.log.info(query_param)
+            except Exception, ex:
+                self.log.error('error in query_params %s' % ex, exc_info=True, extra={'request': request})
+        else:
             query_param['device_name'] = 'esp8266_001t'
         print query_param
         if 'device_name' in query_param:

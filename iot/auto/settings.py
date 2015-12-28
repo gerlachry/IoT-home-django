@@ -114,45 +114,39 @@ REST_FRAMEWORK = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
-    'root': {
-        'level': 'WARNING',
-        'handlers': ['sentry'],
-    },
+
     'formatters': {
-        'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s '
-                      '%(process)d %(thread)d %(message)s'
+        'console': {
+            'format': '[%(asctime)s][%(levelname)s] %(name)s '
+                      '%(filename)s:%(funcName)s:%(lineno)d | %(message)s',
+            'datefmt': '%H:%M:%S',
+            },
         },
-    },
+
     'handlers': {
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.contrib.django.raven_compat.handlers.SentryHandler',
-            'tags': {'custom-tag': 'x'},
-        },
         'console': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'django.db.backends': {
+            'formatter': 'console'
+            },
+        'sentry': {
             'level': 'ERROR',
-            'handlers': ['console'],
-            'propagate': False,
+            'class': 'raven.handlers.logging.SentryHandler',
+            'dsn': 'https://d7c53e09f4274d49bacd8e9e070742bb:965282f69d3f470b84efa393be82db70@app.getsentry.com/62224',
+            },
         },
-        'raven': {
+
+    'loggers': {
+        '': {
+            'handlers': ['console', 'sentry'],
             'level': 'DEBUG',
-            'handlers': ['console'],
             'propagate': False,
-        },
-        'sentry.errors': {
+            },
+        'iotdata': {
             'level': 'DEBUG',
-            'handlers': ['console'],
-            'propagate': False,
+            'propagate': True,
         },
-    },
+    }
 }
 
 try:
