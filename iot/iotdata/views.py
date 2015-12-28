@@ -1,6 +1,9 @@
 import logging
 import json
 import datetime
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 from rest_framework.views import APIView
 from rest_framework.authentication import TokenAuthentication
@@ -10,11 +13,26 @@ from rest_framework import status
 from elasticsearch import Elasticsearch, client
 
 from auto.localsettings import ES_HOST, ES_PORT
+from elastic_helpers import readings_helper
 
 logging.basicConfig(level=logging.DEBUG)
 
 es = Elasticsearch(host=ES_HOST, port=ES_PORT)
 idx_client = client.IndicesClient(es)
+
+@login_required
+def home(request, template_name="base.html"):
+    context = RequestContext(request)
+    # qset = Study.objects.all()
+    # if request.GET.get('nct', False):
+    #     qset = qset.exclude(nctid=None)
+    # if request.GET.get('prefix', None):
+    #     prefix = request.GET['prefix']
+    #     qset = qset.filter(study_id__startswith=prefix)
+    #     context['prefix'] = prefix
+    #
+    # context['studies'] = qset
+    return render_to_response(template_name, context)
 
 
 class Readings(APIView):
@@ -24,46 +42,15 @@ class Readings(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, )
     #parser_classes = (JSONParser, )
+    es_helper = readings_helper.Readings()
 
     def __init__(self):
         self.log = logging.getLogger('Readings')
 
     def post(self, request):
-        """wanted to use POST and the body be the json but could not get the stream from the arduino wifi client to work so sending data as query_param"""
-        try:
-            query_param = request.query_params
-            self.log.info(query_param)
-        except Exception, ex:
-            self.log.info('error in query_params %s' % ex)
-        data_param = json.loads(query_param['data'])
-        #index will be device name
-        if 'device_name' in data_param:
-            idx = data_param['device_name']
-            data_param['timestamp'] = datetime.datetime.now()
-            if not idx_client.exists(idx):
-                setup_index(idx, 'sensor', None)
-            self.log.info('writing to index %s data %s' % (idx, data_param))
-            resp = es.index(index=idx, doc_type='sensor', id=None,  body=data_param)
-            self.log.info('Indexing resp %s' % resp)
-            return Response(resp)
-        else:
-            content = {'error': 'missing required device_name'}
-            return Response(content, status=status.HTTP_400_BAD_REQUEST)
+        """index sensor data to Elastic based on the data query_param json formatted"""
+        return self.es_helper.post(request)
 
     def get(self, request):
-        results = 'all is ok'
-        return Response(results)
-        
-
-def setup_index(index, doc_type, mappings):
-    """create index"""
-    resp = es.indices.create(index, ignore=400)
-    #resp = es.indices.put_mapping(index=index, doc_type=doc_type, body=mappings)
-    logging.log(logging.INFO, 'index created response %s' % resp)
-    if 'acknowledged' in resp:
-        if resp['acknowledged'] <> True:
-            return False
-        else:
-            return True
-    else:
-        return False
+        """retrieve most recent sensor readings for a given device"""
+        return self.es_helper.get(request)

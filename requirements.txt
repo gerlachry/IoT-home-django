@@ -1,8 +1,12 @@
 Django==1.8.7
 argparse==1.2.1
+contextlib2==0.4.0
+django-jsonview==0.5.0
+django-watchman==0.7.2
 djangorestframework==3.2.4
 elasticsearch==2.1.0
 psycopg2==2.6.1
+raven==5.9.2
+requests==2.9.1
 urllib3==1.12
 wsgiref==0.1.2
-git+git://github.com/gerlachry/django-watchman.git@master

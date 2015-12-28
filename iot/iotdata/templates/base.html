@@ -1,0 +1,38 @@
+<html>
+<head>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <title>
+        {% block title %}
+        {% endblock title %}
+    </title>
+    {% block extrahead %}
+    {% endblock extrahead %}
+</head>
+<body>
+ <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand">IoT</a>
+        </div>
+        <ul class="nav navbar-nav">
+          <li>
+            <a href="">All Studies</a>
+          </li>
+          <li>
+            <a href="">Data Dictionary</a>
+          </li>
+        </ul>
+    </div>
+    </nav>
+<div class="container">
+{% block content %}
+{% endblock content %}
+    </div>
+</body>
+</html>
