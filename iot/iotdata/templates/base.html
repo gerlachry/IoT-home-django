@@ -32,6 +32,13 @@
     </nav>
 <div class="container">
 {% block content %}
+    {% for item in data %}
+        {{ item }}
+        {% for reading in item|get_item:"_source" %}
+            {{ reading }}
+    <p></p>
+        {% endfor %}
+    {% endfor %}
 {% endblock content %}
     </div>
 </body>
