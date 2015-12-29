@@ -1,3 +1,4 @@
 *.pyc
 iot/auto/localsettings.py
 *.idea
+iot/auto/static

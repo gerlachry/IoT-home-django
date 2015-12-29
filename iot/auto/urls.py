@@ -15,16 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework.authtoken import views
-from iotdata.views import Readings
-from iotdata.views import home
+from iotdata.views import Readings, home, overview
+
 
 urlpatterns = [
     #url(r'^$', RedirectView.as_view(url='home/', permanent=False), name='index'),
     url(r'^$', home, name='home'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^overview/', views.overview, name='overview'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'api/readings', Readings.as_view(), name='readings'),
     url(r'^watchman/', include('watchman.urls')),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
