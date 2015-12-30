@@ -46,7 +46,7 @@ def home(request, template_name="base.html"):
     return render_to_response(template_name, context)
 
 @login_required
-def overview(request, template_name="overview.html"):
+def overview(request, template_name="iotdata/overview.html"):
     context = RequestContext(request)
     context['data'] = ['device01', 'device02']
     return render_to_response(template_name, context)

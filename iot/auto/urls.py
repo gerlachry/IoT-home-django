@@ -24,7 +24,7 @@ urlpatterns = [
     #url(r'^$', RedirectView.as_view(url='home/', permanent=False), name='index'),
     url(r'^$', home, name='home'),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^overview/', views.overview, name='overview'),
+    url(r'^overview/', overview, name='overview'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'api/readings', Readings.as_view(), name='readings'),
