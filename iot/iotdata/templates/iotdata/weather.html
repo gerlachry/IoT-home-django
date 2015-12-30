@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}
+IoT :: Weather
+{% endblock title %}
+
+{% block content %}
+    <div>
+        <p class="text-center">{{recent.temperature}}</p>
+        <p class="text-center">{{recent.humidity}}</p>
+        <p class="text-center"><em>{{recent.timestamp}}</em></p>
+    </div>
+{% endblock content %}

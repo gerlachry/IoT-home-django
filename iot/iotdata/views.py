@@ -23,23 +23,11 @@ def get_item(dictionary, key):
     """
     filter to use in html tags for looking up a dictionary value for a key
     """
-    print dictionary.get(key)
-    print type(dictionary.get(key))
-    print dictionary.get(key).get('temperature')
     return dictionary.get(key)
 
 @login_required
 def home(request, template_name="base.html"):
     context = RequestContext(request)
-    # qset = Study.objects.all()
-    # if request.GET.get('nct', False):
-    #     qset = qset.exclude(nctid=None)
-    # if request.GET.get('prefix', None):
-    #     prefix = request.GET['prefix']
-    #     qset = qset.filter(study_id__startswith=prefix)
-    #     context['prefix'] = prefix
-    #
-    # context['studies'] = qset
     print request.GET.get('device_name')
     context['data'] = Readings.get(Readings(), request).data
     print context['data']
@@ -48,7 +36,20 @@ def home(request, template_name="base.html"):
 @login_required
 def overview(request, template_name="iotdata/overview.html"):
     context = RequestContext(request)
+    #TODO: add in a service to gather high level stats from weather, switches, and video feeds
     context['data'] = ['device01', 'device02']
+    return render_to_response(template_name, context)
+
+
+@login_required()
+def weather(request, template_name="iotdata/weather.html"):
+    context = RequestContext(request)
+    #TODO: add in a service to gather all the weather data in some paginated fashion along with a most recent reading object
+    context['recent'] = {'temperature': '67', 'timestamp': '30-DEC-2015 15:03:00', 'humidity': '33'}
+    context['history'] = [{'temperature': '66', 'timestamp': '30-DEC-2015 15:03:00', 'humidity': '33'},
+                          {'temperature': '67', 'timestamp': '30-DEC-2015 14:03:00', 'humidity': '33'},
+                          {'temperature': '64', 'timestamp': '30-DEC-2015 13:03:00', 'humidity': '33'},
+                          {'temperature': '64', 'timestamp': '30-DEC-2015 12:03:00', 'humidity': '33'}]
     return render_to_response(template_name, context)
 
 
