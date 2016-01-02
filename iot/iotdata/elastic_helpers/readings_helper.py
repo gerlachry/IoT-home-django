@@ -13,6 +13,7 @@ from rest_framework import status
 from elasticsearch import Elasticsearch, client
 
 from auto.localsettings import ES_HOST, ES_PORT
+from iotdata import models
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -21,7 +22,6 @@ idx_client = client.IndicesClient(es)
 
 
 class Readings():
-    SIZE = 100
 
     def __init__(self):
         self.log = logging.getLogger('Readings')
@@ -49,29 +49,14 @@ class Readings():
             self.log.error('request missing required device_name query param', exc_info=True, extra={'request': request})
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request):
-        """retrieve most recent sensor readings for a given device"""
-        query_param = {}
-        if 'query_param' in request:
-            try:
-                query_param = request.query_params
-                self.log.info(query_param)
-            except Exception, ex:
-                self.log.error('error in query_params %s' % ex, exc_info=True, extra={'request': request})
-        else:
-            query_param['device_name'] = 'esp8266_001t'
-        print query_param
-        if 'device_name' in query_param:
-            device_name = query_param['device_name']
-        else:
+    def get(self, size, device_name=None):
+        """retrieve sensor readings for a given device"""
+        if not device_name:
             #TODO: logic for getting all device names and last 10 readings from each one
             #self.log.error('no device_name provided', exc_info=True, extra={'request': request})
             #return Response({'error': 'missing required device name'}, status=status.HTTP_400_BAD_REQUEST)
             device_name = 'esp8266_001t'
-        if 'size' in query_param:
-            size = query_param['size']
-        else:
-            size = self.SIZE
+            #devices = models.Device.objects.all
         query_string = {"query": {
             "match_all": {}
             },

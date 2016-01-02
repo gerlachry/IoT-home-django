@@ -10,8 +10,12 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-class Device(models.Model):
-    device_name = models.CharField(max_length=50, help_text='unique device id to use when sending data to the api and looking up data also used as the index name')
-    device_desc = models.TextField(null=True, help_text='description of device')
-    device_part_no = models.CharField(max_length=50, null=True, help_text='part number of device if available')
-    device_location = models.CharField(max_length=255, null=True, help_text='location of device')
+class ReadingType(models.Model):
+    reading_name = models.CharField(max_length=255, null=False, help_text='the name of the reading, ie. temperature, humidity, switch')
+
+
+class Feed(models.Model):
+    feed_name = models.CharField(max_length=50, help_text='unique feed name to use when sending data to the api and looking up data also used as the index name')
+    feed_desc = models.TextField(null=True, help_text='description of the feed')
+    reading_type_id = models.ForeignKey(ReadingType, null=False)
+    data_location = models.CharField(max_length=255, null=True, help_text='location info from where the data value originated from')

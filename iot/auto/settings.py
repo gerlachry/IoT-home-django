@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'iotdata',
     'watchman',
     'raven.contrib.django.raven_compat',
+    'import_export',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -17,7 +17,7 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework.authtoken import views
-from iotdata.views import Readings, home, overview, weather
+from iotdata.views import Feeds, home, overview, weather
 
 
 urlpatterns = [
@@ -28,7 +28,7 @@ urlpatterns = [
     url(r'^weather/', weather, name='weather'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
-    url(r'api/readings', Readings.as_view(), name='readings'),
+    url(r'api/feeds', Feeds.as_view(), name='readings'),
     url(r'^watchman/', include('watchman.urls')),
 ]
 
