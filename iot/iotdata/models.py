@@ -4,6 +4,7 @@ from django.dispatch import receiver
 from rest_framework.authtoken.models import Token
 from django.conf import settings
 
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
@@ -14,7 +15,16 @@ class ReadingType(models.Model):
     reading_name = models.CharField(max_length=255, null=False, help_text='the name of the reading, ie. temperature, humidity, switch')
 
     def __unicode__(self):
+        #needed this method which is used in the admin Feed change/add form for the drop down
         return self.reading_name
+
+
+class FeedType(models.Model):
+    feed_type = models.CharField(max_length=255, null=False, help_text='feed type')
+    feed_desc = models.TextField(null=True, help_text='feed description')
+
+    def __unicode__(self):
+        return self.feed_type
 
 
 class Feed(models.Model):
@@ -22,3 +32,4 @@ class Feed(models.Model):
     feed_desc = models.TextField(null=True, help_text='description of the feed')
     reading_type = models.ForeignKey(ReadingType, null=False, verbose_name='reading name')
     data_location = models.CharField(max_length=255, null=True, help_text='location info from where the data value originated from')
+    feed_type = models.ForeignKey(FeedType, null=False)

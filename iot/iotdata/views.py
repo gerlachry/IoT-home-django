@@ -71,12 +71,14 @@ class Feeds(APIView):
         self.log = logging.getLogger('Readings')
 
     def post(self, request):
-        """index sensor data to Elastic based on the data query_param json formatted"""
+        """index sensor data to Elastic based on the data query_param json formatted
+            requires url parameters feed_name
+        """
         print request
         return es_helper.post(request)
 
     def get(self, request):
-        """retrieve most recent sensor readings for a given device"""
+        """retrieve most recent sensor readings for a given feed_name"""
         if 'query_param' in request:
             try:
                 query_param = request.query_params

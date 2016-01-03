@@ -14,6 +14,7 @@ from elasticsearch import Elasticsearch, client
 
 from auto.localsettings import ES_HOST, ES_PORT
 from iotdata import models
+from iotdata.models import Feed
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -34,19 +35,24 @@ class Readings():
         except Exception, ex:
             self.log.error('error in query_params %s' % ex, exc_info=True, extra={'request': request})
         data_param = json.loads(query_param['data'])
-        #index will be device name
-        if 'device_name' in data_param:
-            idx = data_param['device_name']
+        #index will be feed name and document type will be the feed type from metadata
+        if 'feed_name' in data_param:
+            idx = data_param['feed_name']
             data_param['timestamp'] = datetime.datetime.now()
+            doc_type = get_feed_type(idx)
+            if not doc_type:
+                self.log.error('feed_name %s has no feed_type please set one up via admin console', idx, exc_info=True, extra={'request': request})
+                return Response({'error': 'setup feed_type'}, status=status.HTTP_400_BAD_REQUEST)
             if not idx_client.exists(idx):
                 setup_index(idx, 'sensor', None)
             self.log.info('writing to index %s data %s' % (idx, data_param))
             resp = es.index(index=idx, doc_type='sensor', id=None,  body=data_param)
             self.log.info('Indexing resp %s' % resp)
+            #TODO: check for success in response from ES
             return Response(resp)
         else:
-            content = {'error': 'missing required device_name'}
-            self.log.error('request missing required device_name query param', exc_info=True, extra={'request': request})
+            content = {'error': 'missing required feed_name parameter'}
+            self.log.error('request missing required feed_name query param', exc_info=True, extra={'request': request})
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, size, device_name=None):
@@ -88,3 +94,12 @@ def setup_index(index, doc_type, mappings):
     else:
         return False
 
+
+def get_feed_type(feed_name):
+    """lookup the feed_type for a given feed_name"""
+    feed = Feed.objects.filter(feed_name=feed_name)
+    if feed.exists and len(feed) == 1:
+        print feed[0].feed_type
+        return feed[0].feed_type
+    else:
+        return None

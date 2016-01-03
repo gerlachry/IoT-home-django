@@ -2,17 +2,21 @@ from django.contrib import admin
 from django.contrib.admin.options import BaseModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
-from iotdata.models import Feed, ReadingType
+from iotdata.models import Feed, ReadingType, FeedType
 from import_export import resources, fields
 
 # Register your models here.
 
 #admin.site.register(ReadingType)
-#admin.site.register(Feed)
+#admin.site.register(FeedType)
 
 
 class ReadingTypeResource(admin.StackedInline):
     model = ReadingType
+
+
+class FeedTypeResource(admin.StackedInline):
+    model = FeedType
 
 
 class FeedResource(resources.ModelResource):
@@ -29,6 +33,11 @@ class ReadingTypeAdmin(ImportExportModelAdmin):
     list_filter = ('reading_name',)
     search_fields =['reading_name']
     resource_class = ReadingTypeResource
+
+@admin.register(FeedType)
+class FeedTypeAdmin(ImportExportModelAdmin):
+    list_display = ('feed_type', 'feed_desc')
+    resource_class = FeedTypeResource
 
 
 @admin.register(Feed)
