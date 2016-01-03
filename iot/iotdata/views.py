@@ -36,7 +36,7 @@ def home(request, template_name="base.html"):
     return render_to_response(template_name, context)
 
 @login_required
-def overview(request, template_name="iotdata/overview.html"):
+def about(request, template_name="iotdata/about.html"):
     context = RequestContext(request)
     #TODO: add in a service to gather high level stats from weather, switches, and video feeds
     context['data'] = ['device01', 'device02']
@@ -44,7 +44,7 @@ def overview(request, template_name="iotdata/overview.html"):
 
 
 @login_required
-def weather(request, template_name="iotdata/weather.html"):
+def overview(request, template_name="iotdata/overview.html"):
     context = RequestContext(request)
     #TODO: add in a service to gather all the weather data in some paginated fashion along with a most recent reading object
     #context['recent'] = {'temperature': '67', 'timestamp': '30-DEC-2015 15:03:00', 'humidity': '33'}
@@ -55,6 +55,12 @@ def weather(request, template_name="iotdata/weather.html"):
     #                       {'temperature': '64', 'timestamp': '30-DEC-2015 13:03:00', 'humidity': '33'},
     #                       {'temperature': '64', 'timestamp': '30-DEC-2015 12:03:00', 'humidity': '33'}]
     print context
+    return render_to_response(template_name, context)
+
+
+@login_required
+def analysis(request, template_name="iotdata/analysis.html"):
+    context = RequestContext(request)
     return render_to_response(template_name, context)
 
 

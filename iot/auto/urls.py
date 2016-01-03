@@ -17,15 +17,16 @@ from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework.authtoken import views
-from iotdata.views import Feeds, home, overview, weather
+from iotdata.views import Feeds, home, overview, analysis, about
 
 
 urlpatterns = [
     #url(r'^$', RedirectView.as_view(url='home/', permanent=False), name='index'),
-    url(r'^$', home, name='home'),
+    url(r'^$', about, name='about'),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^about/', about, name='about'),
     url(r'^overview/', overview, name='overview'),
-    url(r'^weather/', weather, name='weather'),
+    url(r'^analysis/', analysis, name='analysis'),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api-token-auth/', views.obtain_auth_token),
     url(r'api/feeds', Feeds.as_view(), name='readings'),
