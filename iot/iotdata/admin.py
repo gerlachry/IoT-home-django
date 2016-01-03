@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin.options import BaseModelAdmin
 from import_export.admin import ImportExportModelAdmin
 from import_export.widgets import ForeignKeyWidget
 from iotdata.models import Feed, ReadingType
@@ -10,13 +11,12 @@ from import_export import resources, fields
 #admin.site.register(Feed)
 
 
-class ReadingTypeResource(resources.ModelResource):
-    class meta:
-        model = ReadingType
+class ReadingTypeResource(admin.StackedInline):
+    model = ReadingType
 
 
 class FeedResource(resources.ModelResource):
-    reading_type = fields.Field(column_name='reading_name', attribute='reading_name', widget=ForeignKeyWidget(ReadingType, 'reading_type'))
+    #reading_name = fields.Field(column_name='reading_name', attribute='reading_name', widget=ForeignKeyWidget(ReadingType, 'reading_type'))
 
     class meta:
         model = Feed
@@ -33,7 +33,10 @@ class ReadingTypeAdmin(ImportExportModelAdmin):
 
 @admin.register(Feed)
 class StudyAdmin(ImportExportModelAdmin):
-    list_display = ('feed_name', 'data_location', 'feed_desc',)
+    list_display = ('feed_name', 'data_location', 'feed_desc', 'reading_name')
     #list_filter = ('compound', 'study_phase')
     #search_fields =['study_synopsis','compound','drug_name','study_design','study_title']
     resource_class = FeedResource
+
+    def reading_name(self, instance):
+        return instance.reading_type.reading_name
