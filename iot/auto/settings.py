@@ -115,45 +115,6 @@ REST_FRAMEWORK = {
             'PAGE_SIZE': 10
 }
 
-#copied in from the example on getsentry.com
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': True,
-
-    'formatters': {
-        'console': {
-            'format': '[%(asctime)s][%(levelname)s] %(name)s '
-                      '%(filename)s:%(funcName)s:%(lineno)d | %(message)s',
-            'datefmt': '%H:%M:%S',
-            },
-        },
-
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'console'
-            },
-        'sentry': {
-            'level': 'ERROR',
-            'class': 'raven.handlers.logging.SentryHandler',
-            'dsn': 'https://d7c53e09f4274d49bacd8e9e070742bb:965282f69d3f470b84efa393be82db70@app.getsentry.com/62224',
-            },
-        },
-
-    'loggers': {
-        '': {
-            'handlers': ['console', 'sentry'],
-            'level': 'DEBUG',
-            'propagate': False,
-            },
-        'iotdata': {
-            'level': 'DEBUG',
-            'propagate': True,
-        },
-    }
-}
-
 try:
     from localsettings import *
 except ImportError:
