@@ -1,7 +1,8 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
+from import_export.widgets import ForeignKeyWidget
 from iotdata.models import Feed, ReadingType
-from import_export import resources
+from import_export import resources, fields
 
 # Register your models here.
 
@@ -15,8 +16,11 @@ class ReadingTypeResource(resources.ModelResource):
 
 
 class FeedResource(resources.ModelResource):
+    reading_type = fields.Field(column_name='reading_name', attribute='reading_name', widget=ForeignKeyWidget(ReadingType, 'reading_type'))
+
     class meta:
         model = Feed
+        #fields = ('feed_name', 'feed_desc', 'reading_name', 'data_location')
 
 
 @admin.register(ReadingType)
