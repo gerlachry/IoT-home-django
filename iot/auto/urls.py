@@ -23,6 +23,10 @@ from iotdata.views import Feeds, home, overview, analysis, about
 urlpatterns = [
     #url(r'^$', RedirectView.as_view(url='home/', permanent=False), name='index'),
     url(r'^$', about, name='about'),
+
+    url(r'^accounts/login/$', 'django.contrib.auth.views.login',{'template_name': 'iotdata/login.html'}),
+    #url(r'^logout/$', 'django.contrib.auth.views.logout', {'next_page': '/', 'template_name': 'registration/logged_out.html'}, 'logout'),
+
     url(r'^admin/', include(admin.site.urls)),
     url(r'^about/', about, name='about'),
     url(r'^overview/', overview, name='overview'),
