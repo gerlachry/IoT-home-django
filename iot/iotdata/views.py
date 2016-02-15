@@ -49,11 +49,11 @@ def overview(request, template_name="iotdata/overview.html"):
     #TODO: add in a service to gather all the weather data in some paginated fashion along with a most recent reading object
     #context['recent'] = {'temperature': '67', 'timestamp': '30-DEC-2015 15:03:00', 'humidity': '33'}
     #setattr(request, )
-    context['recent'] = es_helper.get(size=1, device_name='esp8266_001')
-    # context['history'] = [{'temperature': '66', 'timestamp': '30-DEC-2015 15:03:00', 'humidity': '33'},
-    #                       {'temperature': '67', 'timestamp': '30-DEC-2015 14:03:00', 'humidity': '33'},
-    #                       {'temperature': '64', 'timestamp': '30-DEC-2015 13:03:00', 'humidity': '33'},
-    #                       {'temperature': '64', 'timestamp': '30-DEC-2015 12:03:00', 'humidity': '33'}]
+    #context['recent'] = es_helper.get(size=1, device_name='esp8266_001')
+    context['history'] = [{'temperature': '66', 'timestamp': '30-DEC-2015 15:03:00', 'humidity': '33'},
+                          {'temperature': '67', 'timestamp': '30-DEC-2015 14:03:00', 'humidity': '33'},
+                          {'temperature': '64', 'timestamp': '30-DEC-2015 13:03:00', 'humidity': '33'},
+                          {'temperature': '64', 'timestamp': '30-DEC-2015 12:03:00', 'humidity': '33'}]
     print context
     return render_to_response(template_name, context)
 
@@ -71,31 +71,34 @@ class Feeds(APIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (IsAuthenticated, )
     #parser_classes = (JSONParser, )
-    SIZE = 100
+    SIZE = 1
 
     def __init__(self):
         self.log = logging.getLogger('Readings')
 
     def post(self, request):
-        """index sensor data to Elastic based on the data query_param json formatted
+        """
+        index sensor data to Elastic based on the data query_param json formatted
             requires url parameters feed_name
         """
         print request
         return es_helper.post(request)
 
     def get(self, request):
-        """retrieve most recent sensor readings for a given feed_name"""
-        if 'query_param' in request:
-            try:
-                query_param = request.query_params
-                self.log.info(query_param)
-            except Exception, ex:
-                self.log.error('error fetching query_params %s' % ex, exc_info=True, extra={'request': request})
-        else:
+        """
+        retrieve most recent sensor readings for a given feed_name
+        """
+        self.log.debug('request : %s ' % request.query_params)
+        try:
+            query_param = request.query_params
+            self.log.info(query_param)
+        except Exception, ex:
+            self.log.error('error fetching query_params %s' % ex, exc_info=True, extra={'request': request})
+        if not query_param:
             #query_param['device_name'] = 'esp8266_001t'
             return Response('Missing required query parameters refer to api documentation', status=status.HTTP_400_BAD_REQUEST)
         if 'size' in query_param:
             size = query_param['size']
         else:
             size = self.SIZE
-        return es_helper.get(self.SIZE, query_param['device_name'])
+        return es_helper.get(self.SIZE, query_param['feed_name'])

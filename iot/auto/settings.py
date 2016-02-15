@@ -117,6 +117,8 @@ REST_FRAMEWORK = {
 
 try:
     from localsettings import *
-except ImportError:
+    #print 'database settings : '
+    #print localsettings.DATABASES
+except ImportError, ex:
     print 'error finding localsettings'
-    pass
+    print ex

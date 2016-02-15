@@ -27,14 +27,16 @@ class Readings():
     def __init__(self):
         self.log = logging.getLogger('Readings')
 
-    def post(self, request):
-        """index sensor data to Elastic based on the data query_param json formatted"""
+    def     post(self, request):
+        """
+        index sensor data to Elastic based on the data query_param json formatted
+        """
         try:
             query_param = request.query_params
             self.log.info(query_param)
+            data_param = json.loads(query_param['data'])
         except Exception, ex:
             self.log.error('error in query_params %s' % ex, exc_info=True, extra={'request': request})
-        data_param = json.loads(query_param['data'])
         #index will be feed name and document type will be the feed type from metadata
         if 'feed_name' in data_param:
             idx = data_param['feed_name']
@@ -55,9 +57,11 @@ class Readings():
             self.log.error('request missing required feed_name query param', exc_info=True, extra={'request': request})
             return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, size, device_name=None):
-        """retrieve sensor readings for a given device"""
-        if not device_name:
+    def get(self, size=1, feed_name=None):
+        """
+        retrieve sensor readings for a given device
+        """
+        if not feed_name:
             #TODO: logic for getting all device names and last 10 readings from each one
             #self.log.error('no device_name provided', exc_info=True, extra={'request': request})
             #return Response({'error': 'missing required device name'}, status=status.HTTP_400_BAD_REQUEST)
@@ -76,7 +80,7 @@ class Readings():
             ]
         }
         self.log.debug(query_string)
-        results = es.search(index=device_name, body=query_string, size=size)
+        results = es.search(index=feed_name, body=query_string, size=size)
         self.log.debug(results)
         return Response(results['hits']['hits'])
 
