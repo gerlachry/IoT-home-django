@@ -4,8 +4,34 @@ IoT :: Dashboard
 {% endblock title %}
 
 {% block content %}
+        <div>
+        <h1><center>Basement Temperature</center></h1>
+        <table id="t01">
+            <tr>
+                <th>Timestamp</th>
+                <th>Temperature</th>
+            </tr>
+            {% for item in basement_temperature %}
+                <tr>
+                    <td>{{ item|get_item:"_source"|get_item:"timestamp" }}</td>
+                    <td>{{ item|get_item:"_source"|get_item:"temperature" }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
     <div>
-
-        <p class="text-center">place holder</p>
+        <h1><center>Basement Humidity</center></h1>
+        <table id="t01">
+            <tr>
+                <th>Timestamp</th>
+                <th>Humidity</th>
+            </tr>
+            {% for item in basement_humidity %}
+                <tr>
+                    <td>{{ item|get_item:"_source"|get_item:"timestamp" }}</td>
+                    <td>{{ item|get_item:"_source"|get_item:"humidity" }}</td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 {% endblock content %}

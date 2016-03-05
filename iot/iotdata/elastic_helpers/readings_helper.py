@@ -27,7 +27,7 @@ class Readings():
     def __init__(self):
         self.log = logging.getLogger('Readings')
 
-    def     post(self, request):
+    def post(self, request):
         """
         index sensor data to Elastic based on the data query_param json formatted
         """
@@ -46,6 +46,7 @@ class Readings():
                 self.log.error('feed_name %s has no feed_type please set one up via admin console', idx, exc_info=True, extra={'request': request})
                 return Response({'error': 'setup feed_type'}, status=status.HTTP_400_BAD_REQUEST)
             if not idx_client.exists(idx):
+                self.log.info("creating index %s" % idx)
                 setup_index(idx, 'sensor', None)
             self.log.info('writing to index %s data %s' % (idx, data_param))
             resp = es.index(index=idx, doc_type='sensor', id=None,  body=data_param)
@@ -82,7 +83,7 @@ class Readings():
         self.log.debug(query_string)
         results = es.search(index=feed_name, body=query_string, size=size)
         self.log.debug(results)
-        return Response(results['hits']['hits'])
+        return results['hits']['hits']
 
 
 def setup_index(index, doc_type, mappings):
