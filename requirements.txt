@@ -5,7 +5,7 @@ diff-match-patch==20121119
 django-import-export==0.4.2
 django-jsonview==0.5.0
 git+git://github.com/gerlachry/django-watchman.git@master
-djangorestframework==3.2.4
+djangorestframework==3.9.1
 elasticsearch==2.1.0
 psycopg2==2.6.1
 raven==5.9.2
